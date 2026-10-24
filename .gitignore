@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Local & Nested Folders
+PinSoul_be/
+logs/
+uploads/
+

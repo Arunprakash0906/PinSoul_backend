@@ -42,7 +42,7 @@ public class SecurityConfig {
                         exception -> exception.authenticationEntryPoint((request, response, authException) -> response
                                 .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication required")))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/sign/up", "/sign/in", "/error").permitAll()
+                        .requestMatchers("/", "/health", "/sign/up", "/sign/in", "/location/categories", "/error").permitAll()
                         .requestMatchers("/user/**", "/location/**", "/admin/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

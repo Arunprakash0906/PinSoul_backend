@@ -38,6 +38,12 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<String> handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Resource not found: " + exception.getResourcePath());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnexpectedException(Exception exception) {
         logger.error("Unhandled application exception", exception);
