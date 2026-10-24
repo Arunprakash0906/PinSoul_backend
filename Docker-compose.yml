@@ -1,0 +1,57 @@
+services:
+  pinsoul-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pinsoul_backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      # Connects to your local Windows MySQL server (port 3306) via host.docker.internal
+      - DB_URL=jdbc:mysql://${DB_HOST:-host.docker.internal}:${DB_PORT:-3306}/${DB_NAME:-pinsoul}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-Arun@0906}
+      - JWT_SECRET=${JWT_SECRET:-pinsoul-development-secret-key-change-this}
+      - JWT_EXPIRATION_MS=${JWT_EXPIRATION_MS:-86400000}
+    # Enables container to reach services running on the host machine (such as local MySQL)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Local file access & mounts:
+      # 1. Mounts local .env file into the container
+      - ./.env:/app/.env:ro
+      # 2. Mounts logs to host machine for easy debugging
+      - ./logs:/app/logs
+      # 3. Mounts upload directory for persistent storage of uploaded files
+      - ./uploads:/app/uploads
+      # 4. (Optional) Uncomment below to mount pre-built JAR directly for instant restart without Docker rebuild:
+      # - ./target/PinSoul-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+
+  # ===========================================================================
+  # OPTIONAL: Containerized MySQL Service
+  # Uncomment this service if you want MySQL to run entirely inside Docker
+  # instead of using your host machine's MySQL.
+  # (When enabled, change DB_HOST to 'pinsoul-db' above)
+  # ===========================================================================
+  # pinsoul-db:
+  #   image: mysql:8.0
+  #   container_name: pinsoul_mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Arun@0906}
+  #     MYSQL_DATABASE: ${DB_NAME:-pinsoul}
+  #   ports:
+  #     # Mapped to host port 3307 to avoid conflict with your local host MySQL on 3306
+  #     - "3307:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Arun@0906}"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+# volumes:
+#   mysql_data:
