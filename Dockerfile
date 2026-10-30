@@ -27,7 +27,7 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN mkdir -p /app/logs /app/uploads && chown -R appuser:appgroup /app
 
 # Copy packaged JAR from builder stage
-COPY --from=builder /app/target/PinSoul-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 RUN chown appuser:appgroup /app/app.jar
 
 # Switch to non-root user
@@ -37,4 +37,4 @@ USER appuser
 EXPOSE 8080
 
 # Launch Spring Boot application
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
