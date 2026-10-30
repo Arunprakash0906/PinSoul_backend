@@ -31,7 +31,7 @@ public class SignServiceImpl implements SignService {
          throw new SignException("Password is required");
       }
       if (sign.getCategory() == null) {
-         throw new SignException("Category is required");
+         sign.setCategory(Category.USER);
       }
       if (sign.getCategory() != Category.USER) {
          throw new SignException("Admin accounts cannot sign up");

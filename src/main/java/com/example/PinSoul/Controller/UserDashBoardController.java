@@ -26,10 +26,7 @@ import com.example.PinSoul.Respository.UserRespository;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {
-        "http://localhost:5173", "http://127.0.0.1:5173",
-        "http://localhost:5174", "http://127.0.0.1:5174"
-})
+@CrossOrigin(origins = "*")
 public class UserDashBoardController {
     @Autowired
     private LocatoinRepository locarepo;
@@ -58,9 +55,9 @@ public class UserDashBoardController {
         if (details == null) {
             throw new UserException("Profile details are required");
         }
-        String name = details.get("name");
-        String email = details.get("email");
-        String phone = details.get("phone");
+        String name = details.get("name") != null ? details.get("name") : details.get("userName");
+        String email = details.get("email") != null ? details.get("email") : details.get("mailId");
+        String phone = details.get("phone") != null ? details.get("phone") : details.get("mobileNo");
         String address = details.get("address");
 
         if (isBlank(name) || isBlank(email) || isBlank(phone) || isBlank(address)) {
@@ -106,8 +103,11 @@ public class UserDashBoardController {
     private Map<String, String> profileResponse(User profile) {
         Map<String, String> response = new LinkedHashMap<>();
         response.put("name", profile.getUserName());
+        response.put("userName", profile.getUserName());
         response.put("email", profile.getMailId());
+        response.put("mailId", profile.getMailId());
         response.put("phone", profile.getMobileNo());
+        response.put("mobileNo", profile.getMobileNo());
         response.put("address", profile.getAddress());
         return response;
     }
