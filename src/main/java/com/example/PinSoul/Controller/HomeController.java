@@ -17,7 +17,7 @@ public class HomeController {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", "SUCCESS");
         response.put("app", "PinSoul Backend API");
-        response.put("message", "PinSoul backend is running successfully in Docker Desktop!");
+        response.put("message", "PinSoul backend is running successfully!");
         response.put("version", "0.0.1-SNAPSHOT");
         return ResponseEntity.ok(response);
     }
